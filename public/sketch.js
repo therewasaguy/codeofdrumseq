@@ -99,9 +99,6 @@ function setup() {
   dropZone.elt.addEventListener('drop', handleFileSelect, false);
   dropZone.elt.addEventListener('dragleave', handleDragLeave, false);
   
-  // A list of files
-  list = createElement('ol','');
-  
   // When you drag a file on top
   function handleDragOver(evt) {
     // Stop the default browser behavior
@@ -125,17 +122,14 @@ function setup() {
 
     // A FileList
     var files = evt.dataTransfer.files;
-
     // Show some properties
     for (var i = 0, f; f = files[i]; i++) {
-      var file = createElement('li',f.name + ' ' + f.type + ' ' + f.size + ' bytes');
-      file.parent(list);
-
       // Read the file and process the result
       var reader = new FileReader();
       reader.readAsText(f);
       reader.onload = function(e) {
         parseSeqObj(JSON.parse(e.target.result));
+        sendDrumPattern();
       }
     }
   }

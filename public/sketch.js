@@ -1,3 +1,4 @@
+var bpm = 90;
 var current = 0;
 // drums
 var kick = new Tone.Sampler('audio/kick.mp3');
@@ -23,9 +24,9 @@ var wDiv = 16;
 // array of Blocks
 var blocks = [];
 
-// ==================
-// DRUM PATTERN STUFF
-// ==================
+// ===========================
+// Drum Pattern Array for i/o
+// ===========================
 var kickArray = new Array(wDiv);
 var snareArray = new Array(wDiv);
 var hhArray = new Array(wDiv);
@@ -65,13 +66,16 @@ function savePattern() {
 function setup() {
   createCanvas(800, 400);
 
+  // set up tone transport
   Tone.Transport.setInterval(function(time){
     increment(time);
   }, "16n");
   Tone.Transport.start();
-  Tone.Transport.setBpm(90);
+  Tone.Transport.setBpm(bpm);
 
-  // UI
+  // ============ 
+  // UI w/ p5.dom
+  // ============
   createP('');
   var volumeSlider = createSlider();
   var vol = createP('Volume');
@@ -89,8 +93,15 @@ function setup() {
     savePattern();
   });
 
+  var tempoSlider = createSlider();
+  tempoSlider.mouseMoved( function() {
+    Tone.Transport.setBpm( map(tempoSlider.value(), 0, 100, 40, 200));
+  });
+  tempoSlider.value(map(bpm, 40, 200, 0, 100));
+
+
   // ==================
-  // Import Saved Files via https://github.com/shiffman/Programming-from-A-to-Z-F14/blob/master/week1/05_fileinput_p5/04_loadFile_DragDrop/sketch.js
+  // Import Saved Files
   // ==================
   var dropZone = createDiv('Drop files here');
   dropZone.id('drop_zone');
@@ -133,8 +144,11 @@ function setup() {
       }
     }
   }
-}
+} // end setup
 
+// ========================
+// keep time and play drums
+// ========================
 var step = 0;
 function increment(time) {
   step++;
@@ -154,8 +168,22 @@ function playDrum(whichDrum, time) {
   current++;
 }
 
+// ==========================
+// draw and mouse interaction
+// ==========================
 function draw() {
   background(0);
+
+  // draw four boxes
+  fill(20);
+  rect(0, 0, width/4, height);
+  fill(40);
+  rect(width/4, 0, width/4, height);
+  fill(20);
+  rect(width/4 * 2, 0, width/4, height);
+  fill(40);
+  rect(width/4 * 3, 0, width/4, height);
+
   for (var i in blocks) {
     blocks[i].update();
   }
@@ -208,6 +236,9 @@ function mouseReleased() {
   sendDrumPattern();
 }
 
+// ============
+// Block class
+// ============
 var Block = function(x, y) {
   this.x = x;
   this.y = y;

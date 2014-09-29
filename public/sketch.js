@@ -11,8 +11,8 @@ for (var i in drumArray) {
 
 var socket = io();
 
-socket.on('init sequencer', function(data) {
-  // parseSeqObj(data);
+socket.on('initSequencer', function(data) {
+  parseSeqObj(data);
   console.log(data);
 });
 

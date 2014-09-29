@@ -46,13 +46,13 @@ http.listen(app.get('port'), function(){
 io.sockets.on('connection', 
 	// We are given a websocket object in our function
 	function (socket) {
-	
 		console.log("We have a new client: " + socket.id);
 
-		socket.emit('init sequencer', sequencerObject);
+		socket.emit('initSequencer', sequencerObject);
 
 		socket.on('changedPattern', function(data) {
 			console.log('changed pattern!');
+			sequencerObject = data;
 			socket.broadcast.emit('updateSeq', data);
 		});
 

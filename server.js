@@ -29,7 +29,7 @@ sequencerObject[0] = hho;
 
 // console.log(sequencerObject);
 
-app.use(express.static('public/'));
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res, err) {
 	res.sendFile('index.html', { root: __dirname + '/public' });
